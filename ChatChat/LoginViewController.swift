@@ -70,6 +70,13 @@ class LoginViewController: UIViewController {
         bottomLayoutGuideConstraint.constant = 48
     }
     
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let navVC = segue.destination as! UINavigationController
+        let channelsVC = navVC.viewControllers.first as! ChannelListViewController
+        channelsVC.senderDisplayName = nameField.text
+    }
+    
 }
 
 extension UIViewController {

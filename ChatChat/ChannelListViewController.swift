@@ -115,5 +115,15 @@ class ChannelListViewController: UITableViewController {
             newChannelRef.setValue(channelItem)
         }
     }
+    
+    // MARK: Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let channel = sender as? Channel {
+            let chatVC = segue.destination as! ChatViewController
+            chatVC.channel = channel
+            chatVC.channelRef = channelRef.child(channel.id)
+            chatVC.senderDisplayName = senderDisplayName
+        }
+    }
 }
 
