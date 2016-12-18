@@ -159,7 +159,13 @@
                             <outlet property="delegate" destination="x2j-kb-5mV" id="rqM-NJ-EJb"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="udA-kz-mJV"/>
+                    <navigationItem key="navigationItem" id="udA-kz-mJV">
+                        <barButtonItem key="rightBarButtonItem" title="Log out" id="v7V-NY-ezd">
+                            <connections>
+                                <action selector="onLogout:" destination="x2j-kb-5mV" id="qr0-tv-a48"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FHe-Sh-dDm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

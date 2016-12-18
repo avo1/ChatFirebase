@@ -29,6 +29,15 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var bottomLayoutGuideConstraint: NSLayoutConstraint!
     
     // MARK: View Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        FIRAuth.auth()!.addStateDidChangeListener { (auth, user) in
+            if user != nil {
+                print("User \(user?.email) logged in")
+                self.performSegue(withIdentifier: "LoginToChat", sender: nil)
+            }
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -67,7 +76,7 @@ class LoginViewController: UIViewController {
     }
     
     func keyboardWillHideNotification(_ notification: Notification) {
-        bottomLayoutGuideConstraint.constant = 48
+        bottomLayoutGuideConstraint.constant = 55
     }
     
     // MARK: Navigation

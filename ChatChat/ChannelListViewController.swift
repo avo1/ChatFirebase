@@ -116,6 +116,12 @@ class ChannelListViewController: UITableViewController {
         }
     }
     
+    @IBAction func onLogout(_ sender: UIBarButtonItem) {
+        try! FIRAuth.auth()!.signOut()
+        print("bye bye")
+        dismiss(animated: true, completion: nil)
+    }
+    
     // MARK: Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let channel = sender as? Channel {
