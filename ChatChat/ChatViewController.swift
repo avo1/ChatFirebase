@@ -35,6 +35,8 @@ final class ChatViewController: JSQMessagesViewController {
     }
     
     var messages = [JSQMessage]()
+    private lazy var messageRef: FIRDatabaseReference = self.channelRef!.child("messages")
+    private var newMessageRefHandle: FIRDatabaseHandle?
     lazy var outgoingBubbleImageView: JSQMessagesBubbleImage = self.setupOutgoingBubble()
     lazy var incomingBubbleImageView: JSQMessagesBubbleImage = self.setupIncomingBubble()
     
@@ -45,18 +47,8 @@ final class ChatViewController: JSQMessagesViewController {
         senderId = FIRAuth.auth()?.currentUser?.uid
         collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSize.zero
         collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSize.zero
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         
-        // messages from someone else
-        addMessage(withId: "foo", name: "Mr.Bolt", text: "I am so fast!")
-        // messages sent from local sender
-        addMessage(withId: senderId, name: "Me", text: "I bet I can run faster than you!")
-        addMessage(withId: senderId, name: "Me", text: "I like to run!")
-        // animates the receiving of a new message on the view
-        finishReceivingMessage()
+        observeMessages()
     }
     
     // create some dummy messages
@@ -101,6 +93,37 @@ final class ChatViewController: JSQMessagesViewController {
     }
     
     // MARK: Firebase related methods
+    override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
+        let itemRef = messageRef.childByAutoId()
+        let messageItem = [
+            "senderId": senderId!,
+            "senderName": senderDisplayName!,
+            "text": text!,
+            ]
+        itemRef.setValue(messageItem)
+        
+        // play some sound
+        JSQSystemSoundPlayer.jsq_playMessageSentSound()
+        
+        finishSendingMessage()
+    }
+    
+    private func observeMessages() {
+        messageRef = channelRef!.child("messages")
+        let messageQuery = messageRef.queryLimited(toLast:25)
+        
+        newMessageRefHandle = messageQuery.observe(.childAdded, with: { (snapshot) -> Void in
+            
+            let messageData = snapshot.value as! Dictionary<String, String>
+            
+            if let id = messageData["senderId"] as String!, let name = messageData["senderName"] as String!, let text = messageData["text"] as String!, text.characters.count > 0 {
+                self.addMessage(withId: id, name: name, text: text)
+                self.finishReceivingMessage()
+            } else {
+                print("Error! Could not decode message data")
+            }
+        })
+    }
     
     
     // MARK: UI and User Interaction
