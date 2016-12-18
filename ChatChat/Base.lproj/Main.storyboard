@@ -133,7 +133,6 @@
                                 <connections>
                                     <outlet property="createChannelButton" destination="4se-cC-KMb" id="zMi-84-Sp1"/>
                                     <outlet property="newChannelNameField" destination="g3q-Bh-nA7" id="jJn-P1-shF"/>
-                                    <segue destination="IHh-zK-Dgq" kind="show" identifier="ShowChannel" id="Fx3-6W-dIy"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ExistingChannel" textLabel="Ytl-yL-dxb" style="IBUITableViewCellStyleDefault" id="m4f-vC-RT4">
@@ -166,6 +165,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="IHh-zK-Dgq" kind="show" identifier="ShowChannel" id="e3v-hB-IH7"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FHe-Sh-dDm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

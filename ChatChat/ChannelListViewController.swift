@@ -99,6 +99,7 @@ class ChannelListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == Section.currentChannelsSection.rawValue {
             let channel = channels[indexPath.row]
             performSegue(withIdentifier: "ShowChannel", sender: channel)
@@ -108,6 +109,10 @@ class ChannelListViewController: UITableViewController {
     // MARK :Actions
     @IBAction func createChannel(_ sender: AnyObject) {
         if let name = newChannelTextField?.text {
+            if name == "" {
+                showAlert(title: "Empty channel", content: "Please enter a channel name")
+                return
+            }
             let newChannelRef = channelRef.childByAutoId()
             let channelItem = [
                 "name": name
