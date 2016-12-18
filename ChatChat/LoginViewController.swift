@@ -21,6 +21,7 @@
  */
 
 import UIKit
+import Firebase
 
 class LoginViewController: UIViewController {
     
@@ -42,6 +43,19 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginDidTouch(_ sender: AnyObject) {
+        let name = nameField.text ?? ""
+        if name.trimmingCharacters(in: .whitespaces).characters.count == 0 {
+            self.showAlert(title: "Empty username", content: "Please enter an username")
+            return
+        }
+        
+        FIRAuth.auth()!.signInAnonymously(completion: { (user, error) in
+            if error == nil {
+                self.performSegue(withIdentifier: "LoginToChat", sender: nil)
+            } else {
+                self.showAlert(title: "Login error", content: (error?.localizedDescription)!)
+            }
+        })
     }
     
     // MARK: - Notifications
@@ -57,4 +71,14 @@ class LoginViewController: UIViewController {
     }
     
 }
+
+extension UIViewController {
+    func showAlert(title: String, content: String) {
+        let alert = UIAlertController(title: title, message: content, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
 
